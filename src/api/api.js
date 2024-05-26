@@ -17,5 +17,10 @@ export const countriesAPI = {
     getRegion(dispatch, region) {
         instance.get(`/region/${region}`)
         .then((res) => dispatch(getRegionAC(res.data)))
+    },
+    getSearch(dispatch, name) {
+        instance.get(`/name/${name}`)
+        .then((res) => dispatch(getSearchAC(res.data)))
+        .catch((err) => console.log(err));
     }
 }

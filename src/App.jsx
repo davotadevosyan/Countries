@@ -19,7 +19,7 @@ function App() {
   
   return (
     <>
-       <Header dispatch={dispatch}/>
+       <Header dispatch={dispatch} state={state}/>
        <Routes>
         <Route path='/' element={<Home countries={state.countries}/>}/>
         <Route path='/:name' element={<CountryPage country={state.country} dispatch={dispatch}/>}/>

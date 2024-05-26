@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { countriesAPI } from '../../api/api'
 import { styled, alpha } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
@@ -10,7 +10,13 @@ import InputBase from '@mui/material/InputBase';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import Button from '@mui/material/Button';
+import { textAC } from '../../store/store';
+import './Header.css' 
+import { NavLink } from 'react-router-dom';
 
+
+
+// MU Start
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
   borderRadius: theme.shape.borderRadius,
@@ -52,9 +58,20 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     },
   },
 }));
+// MU End
 
-export default function Header({dispatch}) {
 
+export default function Header({ dispatch, state }) {
+   const [open, setOpen] = useState(false)
+    
+    useEffect(() => {
+      if (state.text.length > 2) {
+        setOpen(true)
+        countriesAPI.getSearch(dispatch, state.text)
+      } else {
+        setOpen(false)
+      }
+    }, [state.text])
     const region = ['Africa','Europe','Americas','Asia','Oceania']
 
   return (
@@ -77,59 +94,54 @@ export default function Header({dispatch}) {
             sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
           >
             <div>
-            <button onClick={() => countriesAPI.getAll(dispatch)}>all</button>
+            <Button
+             color='secondary'
+             variant='contained'
+             onClick={() => countriesAPI.getAll(dispatch)}>all</Button>
             {
                 region.map((reg) => {
                     return (
                     <Button 
                        key={reg}
                        color='secondary'
-                       variant='contained'
+                       variant='contained' 
                        onClick={() => countriesAPI.getRegion(dispatch, reg)}>{reg}
                     </Button>)
                 })
             }
         </div>
           </Typography>
+         
           <Search>
             <SearchIconWrapper>
               <SearchIcon />
             </SearchIconWrapper>
             <StyledInputBase
+              value={state.text} 
+              onChange={(e) => dispatch(textAC(e))}
               placeholder="Search…"
               inputProps={{ 'aria-label': 'search' }}
             />
           </Search>
         </Toolbar>
+        <div className='o'>
+          { 
+             open && <div className='open'>
+                {
+                    state.search.map((s) => {
+                      return (
+                        <NavLink to={`/${s.name.common}`} onClick={() => setOpen(false)} text = ''>
+                          <img src={s.flags.png}/>
+                        </NavLink>
+                      )
+                    }) 
+                }
+             </div> 
+         }
+        </div>
       </AppBar>
     </Box>
   );
 }
 
-// export default function Header({dispatch}) {
-//     const region = ['Africa','Europe','Americas','Asia','Oceania']
-//   return (
-//     <div>
-//         <AppBar>
-//             <Toolbar>
 
-//             </Toolbar>
-//         </AppBar>
-//         <div>
-//             <button onClick={() => countriesAPI.getAll(dispatch)}>all</button>
-//             {
-//                 region.map((reg) => {
-//                     return (
-//                     <button 
-//                        key={reg}
-//                        onClick={() => countriesAPI.getRegion(dispatch, reg)}>{reg}
-//                     </button>)
-//                 })
-//             }
-//         </div>
-//         <div>
-//             <input />
-//         </div>
-//     </div>
-//   )
-// }

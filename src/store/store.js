@@ -2,11 +2,15 @@
 const GET_ALL = 'get-all'
 const GET_ONE = 'get-one'
 const GET_REGION = 'get-region'
+const GET_SEARCH = 'get-search'
+const TEXT = 'text'
 
 //initState
 export const initialState = {
     countries: [],
-    country: []
+    country: [],
+    search: [],
+    text: ''
 }
 
 
@@ -16,7 +20,7 @@ export const reducer = (state, action) => {
         case GET_ALL:
             return {
                 ...state,
-                countries : action.payload
+                countries: action.payload
             }
         case GET_ONE: 
             return {
@@ -28,6 +32,17 @@ export const reducer = (state, action) => {
                 ...state,
                 countries: action.payload
             }
+        case GET_SEARCH: 
+            return {
+                ...state,
+                search: action.payload
+            }
+        case TEXT : {
+            return {
+                ...state,
+                text: action.payload
+            }
+        }    
         default:
             return state;
     }
@@ -37,3 +52,5 @@ export const reducer = (state, action) => {
 export const getAllAC = (data) => ({type: GET_ALL, payload : data});
 export const getOneAC = (data) => ({type: GET_ONE, payload : data});
 export const getRegionAC = (data) => ({type: GET_REGION, payload : data});
+export const getSearchAC = (data) => ({type: GET_SEARCH, payload : data});
+export const textAC = (event) => ({type: TEXT, payload : event.target.value})
